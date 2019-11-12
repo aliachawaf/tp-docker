@@ -1,8 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+// Import task types
+import com.bmuschko.gradle.docker.tasks.image.*
+
 
 plugins {
     application
     kotlin("jvm") version "1.3.50"
+    id("com.bmuschko.docker-remote-api") version "5.3.0"
 }
 
 group = "dev.gleroy.devops.tp-docker"
@@ -63,6 +67,14 @@ tasks.withType<Jar> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+
+
+// Use task types
+tasks.create("buildTP", DockerBuildImage::class) {
+    inputDir.set(file("docker/"))
+    tags.add("test/tp-devops:latest")
 }
 
 tasks.withType<Test> {
